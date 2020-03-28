@@ -28,11 +28,16 @@ if [ -e "$(pwd)/tlpi-dist/libtlpi.a" ];then
 fi
 
 #4: Append bash function in .bashrc
+echo "I suggest adding this helper bash function to bashrc for easy usage"
+cat ./scripts/append.sh   
 printf "Do you want to add bash helper function? [Y/n] "
 read bashAddOption
-if [ "$bashAddOption" = "Y" ];then 
-    echo "export TLPI_LIB=$(pwd)/tlpi-dist/libtlpi.a"
-    echo "export TLPI_HDR=$(pwd)/tlpi-dist/lib"
+if [ "$bashAddOption" = "Y" ];then
+    echo "" >> ~/.bashrc
+    echo export TLPI_LIB=$(pwd)/tlpi-dist/libtlpi.a >> ~/.bashrc
+    echo export TLPI_HDR=$(pwd)/tlpi-dist/lib >> ~/.bashrc
+    cat ./scripts/append.sh >> ~/.bashrc
+    echo "Reloading bash now"
+    source ~/.bashrc    
 fi
 
-gcc -std=c99 -D_XOPEN_SOURCE=600 -D_DEFAULT_SOURCE -g -I"$(pwd)/tlpi-dist/lib" -pedantic -Wall -W -Wmissing-prototypes -Wno-sign-compare -Wimplicit-fallthrough -Wno-unused-parameter  ./concepts/files/copy.c $(pwd)/tlpi-dist/libtlpi.a -o copy
