@@ -1,8 +1,12 @@
 #!/bin/bash
 
+function prompt() {
+    printf "\n> $1"
+}
+
 #1: Download and extract archive
 if [ -e tlpi.tar.gz ]; then
-    printf "tlpi.tar.gz Exists, Do you want to continue? [Y/n] "
+    prompt "tlpi.tar.gz Exists, Do you want to continue? [Y/n] "
     read option
     if [ "$option" = "Y" ];then 
         curl http://man7.org/tlpi/code/download/tlpi-200106-dist.tar.gz --output tlpi.tar.gz
@@ -17,7 +21,7 @@ sudo apt install libcap-dev libacl1-dev libselinux1-dev libseccomp-dev
 
 #3: Building source
 if [ -e "$(pwd)/tlpi-dist/libtlpi.a" ];then
-    printf "libtlpi.a Exists, Do you want to continue? [Y/n] "
+    prompt "libtlpi.a Exists, Do you want to continue? [Y/n] "
     read option
     if [ "$option" = "Y" ];then 
         echo "Running make in tlpi_hdr now, building all source, will take some time. "
@@ -28,9 +32,11 @@ if [ -e "$(pwd)/tlpi-dist/libtlpi.a" ];then
 fi
 
 #4: Append bash function in .bashrc
-echo "I suggest adding this helper bash function to bashrc for easy usage"
+prompt "I strongly suggest adding these to bashrc for easy usage\n"
+echo export TLPI_LIB=$(pwd)/tlpi-dist/libtlpi.a
+echo export TLPI_HDR=$(pwd)/tlpi-dist/lib
 cat ./scripts/append.sh   
-printf "Do you want to add bash helper function? [Y/n] "
+prompt "Do you want to add these? [Y/n] "
 read bashAddOption
 if [ "$bashAddOption" = "Y" ];then
     echo "" >> ~/.bashrc
